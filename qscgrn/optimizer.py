@@ -130,6 +130,21 @@ class model(quantum_circuit):
         self.generate_circuit()
         self.create_gradient()
 
+    def _gradient_is_not_empty(self):
+        """
+        Validates whether the gradient dataframe is initialized or not.
+        Raises
+        ------
+        AttributeError
+            If gradient is not a None object.
+        """
+        if self.gradient is not None:
+            info_print("Gradients for the QuantumGRN optimization "
+                       "are aleardy initialized", level="E")
+            raise AttributeError("The quantum circuit for GRN model "
+                                 "has gradients initialized")
+
+
     def create_gradient(self):
         """
         Creates the gradient attribute where the gradientes of the
