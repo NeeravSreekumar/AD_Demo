@@ -20,6 +20,38 @@ def _loss_function(p_out, p_obs, method="jensen-shannon"):
 
     else:
         raise ValueError("No method to compute the loss function")
+def _loss_constraint(theta, ratio=1):
+    """
+    Computes the constraint term for the Jensen-Shannon loss function.
+    Parameters
+    ----------
+    theta : pd.Series
+        The parameter values in the quantum circuit.
+    ratio : float
+        The ratio to compute the loss constraint.
+    Returns
+    -------
+    float
+        The constraint term for the Jensen-Shannon loss function.
+    """
+    # Define your constraint calculation here
+    der_const = (-2 * ratio * 4 * theta ** 3) \
+                / np.power(theta ** 4 - (np.pi / 2) ** 4, 3)
+    return np.sum(der_const)
+
+def _compute_error(p_out, p_obs):
+    err = np.power(p_out - p_obs, 2)
+    return np.sum(err)
+
+def _laplace_smooth(distribution, ncells):
+    alpha = 1
+    dim = len(distribution)
+    distribution = ncells * distribution
+    N = np.sum(distribution)
+    distribution = distribution + alpha
+    N = N + alpha * dim
+    return distribution / N, N
+
 
 
 class model(quantum_circuit):
