@@ -169,43 +169,21 @@ class quantum_circuit(qscgrn_model):
 
 
 
-    def compute_regulation(self):
-        """
-        Computes the transformation matrices of each gate in `L_k`
-        layer and saves the result into self.regulation
-        """
-        arr = np.zeros((len(self.edges), 2 ** len(self.genes), 2 ** len(self.genes)))
+def compute_regulation(self):
+    """
+    Computes the transformation matrices of each gate in `L_k`
+    layer and saves the result into self.regulation
+    """
+    self.regulation = QuantumCircuit(len(self.genes))
+    
+    # Iterate through each target qubit
+    for target_qubit in range(len(self.genes) - 1, -1, -1):
+        # Iterate through each control qubit
+        for control_qubit in range(len(self.genes)):
+            # Exclude the target qubit itself and the qubits with higher indices than the target qubit
+            if control_qubit != target_qubit and control_qubit < target_qubit:
+                self.regulation.cry(self.theta[target_qubit][control_qubit], control_qubit, target_qubit)
 
-        arr[0] = cry_gate(self.theta[(3, 0)], len(self.genes), 0, 3)
-        arr[1] = cry_gate(self.theta[(4, 7)], len(self.genes), 7, 4)
-        arr[2] = cry_gate(self.theta[(3, 1)], len(self.genes), 1, 3)
-        arr[3] = cry_gate(self.theta[(4, 6)], len(self.genes), 6, 4)
-        arr[4] = cry_gate(self.theta[(3, 2)], len(self.genes), 2, 3)
-        arr[5] = cry_gate(self.theta[(4, 5)], len(self.genes), 5, 4)
-        arr[6] = cry_gate(self.theta[(2, 0)], len(self.genes), 0, 2)
-        arr[7] = cry_gate(self.theta[(3, 7)], len(self.genes), 7, 3)
-        arr[8] = cry_gate(self.theta[(2, 1)], len(self.genes), 1, 2)
-        arr[9] = cry_gate(self.theta[(3, 6)], len(self.genes), 6, 3)
-        arr[10] = cry_gate(self.theta[(3, 5)], len(self.genes), 5, 3)
-        arr[11] = cry_gate(self.theta[(3, 4)], len(self.genes), 4, 3)
-        arr[12] = cry_gate(self.theta[(4, 0)], len(self.genes), 0, 4)
-        arr[13] = cry_gate(self.theta[(5, 7)], len(self.genes), 7, 5)
-        arr[14] = cry_gate(self.theta[(4, 1)], len(self.genes), 1, 4)
-        arr[15] = cry_gate(self.theta[(5, 6)], len(self.genes), 6, 5)
-        arr[16] = cry_gate(self.theta[(4, 2)], len(self.genes), 2, 4)
-        arr[17] = cry_gate(self.theta[(2, 7)], len(self.genes), 7, 2)
-        arr[18] = cry_gate(self.theta[(1, 0)], len(self.genes), 0, 1)
-        arr[19] = cry_gate(self.theta[(2, 6)], len(self.genes), 6, 2)
-        arr[20] = cry_gate(self.theta[(2, 5)], len(self.genes), 5, 2)
-        arr[21] = cry_gate(self.theta[(5, 0)], len(self.genes), 0, 5)
-        arr[22] = cry_gate(self.theta[(6, 7)], len(self.genes), 7, 6)
-        arr[23] = cry_gate(self.theta[(5, 1)], len(self.genes), 1, 6)
-        arr[24] = cry_gate(self.theta[(1, 6)], len(self.genes), 6, 1)
-        arr[25] = cry_gate(self.theta[(1, 7)], len(self.genes), 7, 1)
-        arr[26] = cry_gate(self.theta[(6, 0)], len(self.genes), 0, 6)
-        arr[27] = cry_gate(self.theta[(7, 0)], len(self.genes), 0, 7)
-
-        self.regulation = arr
 
 
     def generate_circuit(self):
