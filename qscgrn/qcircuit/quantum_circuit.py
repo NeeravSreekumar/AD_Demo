@@ -167,22 +167,14 @@ class quantum_circuit(qscgrn_model):
 
         self.encoder = RR
 
+    def compute_regulation(self):
+        self.regulation = QuantumCircuit(len(self.genes))
+        for target_qubit in range(len(self.genes) - 1, -1, -1):
+            for control_qubit in range(len(self.genes)):
+                if control_qubit != target_qubit and control_qubit < target_qubit:
+                    self.regulation.cry(self.theta[target_qubit][control_qubit], control_qubit, target_qubit)
 
 
-def compute_regulation(self):
-    """
-    Computes the transformation matrices of each gate in `L_k`
-    layer and saves the result into self.regulation
-    """
-    self.regulation = QuantumCircuit(len(self.genes))
-    
-    # Iterate through each target qubit
-    for target_qubit in range(len(self.genes) - 1, -1, -1):
-        # Iterate through each control qubit
-        for control_qubit in range(len(self.genes)):
-            # Exclude the target qubit itself and the qubits with higher indices than the target qubit
-            if control_qubit != target_qubit and control_qubit < target_qubit:
-                self.regulation.cry(self.theta[target_qubit][control_qubit], control_qubit, target_qubit)
 
 
 
