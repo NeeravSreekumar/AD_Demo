@@ -4,6 +4,8 @@ from .utils import *
 from .gates import *
 from ..run import *
 from ..utils import info_print
+import qiskit
+from qiskit import QuantumCircuit
 
 
 __all__ = ['quantum_circuit']
